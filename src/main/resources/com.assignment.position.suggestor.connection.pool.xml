@@ -1,0 +1,94 @@
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+					http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+					http://www.springframework.org/schema/context
+            		http://www.springframework.org/schema/context/spring-context-4.1.xsd
+            		http://www.springframework.org/schema/util 
+            		http://www.springframework.org/schema/util/spring-util-4.1.xsd">
+	
+	<context:annotation-config />
+    <context:component-scan base-package="com.assignment" />
+    <context:property-placeholder location="classpath:goeuro-application.properties" />
+    
+	<!-- All http parameters -->
+	<bean id="httpParams" class="org.apache.http.params.BasicHttpParams" />
+	
+	<bean class="org.apache.http.params.HttpConnectionParamBean">
+		<constructor-arg ref="httpParams" />
+		<property name="connectionTimeout" value="${goeuro.connect.timeout:180000}" />
+		<property name="soTimeout" value="${goeuro.socket.timeout:120000}" />
+		<property name="tcpNoDelay" value="false" />
+		<property name="staleCheckingEnabled" value="false" />
+	</bean>
+	
+	<bean class="org.apache.http.params.HttpProtocolParamBean">
+		<constructor-arg ref="httpParams" />
+		<property name="contentCharset" value="UTF-8" />
+		<property name="useExpectContinue" value="false" />
+	</bean>
+	
+	<!-- protocol beans goes here -->
+	
+	<bean id="socketFactory" class="org.apache.http.conn.scheme.PlainSocketFactory" factory-method="getSocketFactory" />
+	
+	<bean id="scheme-http" class="org.apache.http.conn.scheme.Scheme">
+		<constructor-arg value="http" />
+		<constructor-arg ref="socketFactory" />
+		<constructor-arg type="int" value="80" />
+	</bean>
+	
+	<bean id="schemeRegistry" class="org.apache.http.conn.scheme.SchemeRegistry" />
+	
+	<bean class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+		<property name="targetObject" ref="schemeRegistry" />
+		<property name="targetMethod" value="setItems" />
+		<property name="arguments">
+			<map>
+				<entry key="http" value-ref="scheme-http" />
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="retryHandler" class="org.apache.http.impl.client.DefaultHttpRequestRetryHandler">
+		<constructor-arg value="${goeuro.request.retry.count:3}" />
+		<constructor-arg value="${goeuro.request.retry:true}" />
+		<constructor-arg>
+			<list></list>
+		</constructor-arg>
+	</bean>
+	
+	<!-- Connection related beans goes here -->
+	<bean id="connectionManager" class="org.apache.http.impl.conn.PoolingClientConnectionManager" destroy-method="shutdown">
+		<constructor-arg ref="schemeRegistry" />
+		<property name="maxTotal" value="${goeuro.max.connection:5}" />
+		<property name="defaultMaxPerRoute" value="${goeuro.max.connection.per.route:3}" />
+	</bean>
+	
+	<bean id="httpClient" class="org.apache.http.impl.client.DefaultHttpClient">
+		<constructor-arg ref="connectionManager" />
+		<constructor-arg ref="httpParams" />
+		<property name="httpRequestRetryHandler" ref="retryHandler" />
+	</bean>
+	
+	<bean id="httpClientRequestFactory" class="org.springframework.http.client.HttpComponentsClientHttpRequestFactory">
+		<constructor-arg ref="httpClient" />
+		<property name="connectTimeout" value="${goeuro.connect.timeout:180000}" />
+		<property name="readTimeout" value="${goeuro.socket.timeout:120000}" />
+	</bean> 
+	
+	<bean id="restTemplate" class="org.springframework.web.client.RestTemplate">
+		<constructor-arg ref="httpClientRequestFactory"/>
+	</bean>
+	
+	<bean id="systemPropertiesLoader"
+	    class="org.springframework.beans.factory.config.MethodInvokingFactoryBean">
+	    <property name="targetObject" value="#{@systemProperties}" />
+	    <property name="targetMethod" value="putAll" />
+	    <property name="arguments">
+	        <util:properties location="classpath:goeuro-application.properties" />
+	    </property>
+	</bean>
+</beans>

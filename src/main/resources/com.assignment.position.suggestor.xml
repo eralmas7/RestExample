@@ -1,0 +1,50 @@
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+					http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+					http://www.springframework.org/schema/context
+            		http://www.springframework.org/schema/context/spring-context-4.1.xsd
+            		http://www.springframework.org/schema/util 
+            		http://www.springframework.org/schema/util/spring-util-4.1.xsd">
+	
+	<import resource="classpath:com.assignment.position.suggestor.connection.pool.xml" />
+
+	<bean id="statusResponseValidator" class="com.assignment.validator.GoEuroResponseStatusValidator">
+		<constructor-arg ref="responseValidator"/>
+	</bean>
+	
+	<bean id="responseValidator" class="com.assignment.validator.GoEuroResponseValidator">
+		<constructor-arg ref="nullResponseValidator"/>
+	</bean>
+	
+	<bean id="nullResponseValidator" class="com.assignment.validator.NullResponseValidator" />
+
+	<bean id="nullRequestValidator" class="com.assignment.validator.NullRequestValidator" />
+	
+	<bean id="requestedCityValidator" class="com.assignment.validator.RequestedCityValidator">
+		<constructor-arg ref="nullRequestValidator"/>
+	</bean>
+
+	<bean id="userRequestValidator" class="com.assignment.validator.UserRequestValidator">
+		<constructor-arg ref="requestedCityValidator"/>
+	</bean>
+
+	<bean id="requestPostProcessor" class="com.assignment.request.handler.PositionPostProcessor" />
+	
+	<bean id="positionSuggestor" class="com.assignment.dao.PositionSuggestionDao">
+		<constructor-arg ref="restTemplate"/>
+		<constructor-arg ref="responseValidator"/>
+	</bean>
+	
+	<bean id="requestHandler" class="com.assignment.request.handler.UserRequestHandler">
+		<constructor-arg ref="userRequestValidator"/>
+		<constructor-arg ref="positionSuggestor"/>
+		<constructor-arg ref="requestPostProcessor"/>
+	</bean>
+	
+	<bean id="requestInvoker" class="com.assignment.request.handler.RequestInvoker">
+		<constructor-arg ref="requestHandler"/>
+	</bean>
+</beans>
