@@ -1,6 +1,7 @@
 package com.assignment.dao;
 
 import java.util.List;
+import com.assignment.response.model.InputRequest;
 import com.assignment.response.model.PositionDetails;
 
 /**
@@ -11,8 +12,8 @@ public interface SuggestionDao {
     /**
      * Data access object to get position suggestion for cityName
      * 
-     * @param cityName
+     * @param inputRequest
      * @return
      */
-    public List<PositionDetails> getSuggestion(final String cityName);
+    public List<PositionDetails> getSuggestion(final InputRequest inputRequest);
 }

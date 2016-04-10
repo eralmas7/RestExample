@@ -3,6 +3,7 @@ package com.assignment.response.model;
 import java.math.BigDecimal;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import com.assignment.utils.Constants;
 
 /**
  * Latitude and Longitude representation.
@@ -26,6 +27,14 @@ public class GeoPosition {
 
     public void setLatitude(final BigDecimal latitude) {
         this.latitude = latitude;
+    }
+
+    public String getCsvString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(latitude);
+        stringBuilder.append(Constants.FIELD_SEPERATOR);
+        stringBuilder.append(longitude);
+        return stringBuilder.toString();
     }
 
     @Override

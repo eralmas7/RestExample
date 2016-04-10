@@ -11,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.assignment.exception.InvalidDataException;
 import com.assignment.request.handler.Invoker;
+import com.assignment.response.model.InputRequest;
 import com.assignment.response.model.PositionDetails;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -22,8 +23,8 @@ public class IntegrationTest {
 
     @Test
     public void test_WhenInvokerInvokesWithExistingInput_ThenMethodReturnsValuesSuccessfully() {
-        String[] userInput = new String[] {"Berlin"};
-        List<PositionDetails> positionDetailsList = invoker.invoke(userInput);
+        InputRequest inputRequest = new InputRequest("Berlin");
+        List<PositionDetails> positionDetailsList = invoker.invoke(inputRequest);
         assertEquals(8, positionDetailsList.size());
         positionDetailsList.stream().forEach(positionDetails -> {
             assertNotNull(positionDetails.getGeoPosition().getLatitude());
@@ -31,26 +32,20 @@ public class IntegrationTest {
             assertNotNull(positionDetails.getId());
             assertNotNull(positionDetails.getName());
             assertNotNull(positionDetails.getType());
-            assertTrue(positionDetails.getName().contains(userInput[0]));
+            assertTrue(positionDetails.getName().contains(inputRequest.getCity()));
         });
     }
 
     @Test
     public void test_WhenInvokerInvokesWithNonExistingInput_ThenMethodReturnsSuccessfullyWithEmptyValue() {
-        String[] userInput = new String[] {"Berlin11"};
-        List<PositionDetails> positionDetailsList = invoker.invoke(userInput);
+        InputRequest inputRequest = new InputRequest("Berlin11");
+        List<PositionDetails> positionDetailsList = invoker.invoke(inputRequest);
         assertEquals(0, positionDetailsList.size());
     }
 
     @Test(expected = InvalidDataException.class)
     public void test_WhenInvokerInvokesWithEmptyInput_ThenMethodThrowsException() {
-        String[] userInput = new String[] {};
-        invoker.invoke(userInput);
-    }
-
-    @Test(expected = InvalidDataException.class)
-    public void test_WhenInvokerInvokesWithNullInput_ThenMethodThrowsException() {
-        String[] userInput = null;
-        invoker.invoke(userInput);
+        InputRequest inputRequest = new InputRequest("");
+        invoker.invoke(inputRequest);
     }
 }

@@ -3,6 +3,7 @@ package com.assignment.response.model;
 import java.math.BigInteger;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+import com.assignment.utils.Constants;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -47,6 +48,18 @@ public class PositionDetails {
 
     public void setGeoPosition(final GeoPosition geoPosition) {
         this.geoPosition = geoPosition;
+    }
+
+    public String getCsvString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(id);
+        stringBuilder.append(Constants.FIELD_SEPERATOR);
+        stringBuilder.append(name);
+        stringBuilder.append(Constants.FIELD_SEPERATOR);
+        stringBuilder.append(type);
+        stringBuilder.append(Constants.FIELD_SEPERATOR);
+        stringBuilder.append(geoPosition.getCsvString());
+        return stringBuilder.toString();
     }
 
     @Override

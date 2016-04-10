@@ -1,6 +1,7 @@
 package com.assignment.request.handler;
 
 import java.util.List;
+import com.assignment.response.model.InputRequest;
 import com.assignment.response.model.PositionDetails;
 
 /**
@@ -12,8 +13,8 @@ public interface Invoker {
      * A delegator which is responsible to call request life cycle method to fetch position
      * information.
      * 
-     * @param request
+     * @param inputRequest
      * @return
      */
-    public List<PositionDetails> invoke(final String[] request);
+    public List<PositionDetails> invoke(final InputRequest inputRequest);
 }

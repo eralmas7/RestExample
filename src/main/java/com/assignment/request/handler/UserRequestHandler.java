@@ -2,6 +2,7 @@ package com.assignment.request.handler;
 
 import java.util.List;
 import com.assignment.dao.SuggestionDao;
+import com.assignment.response.model.InputRequest;
 import com.assignment.response.model.PositionDetails;
 import com.assignment.validator.Validator;
 
@@ -10,24 +11,24 @@ import com.assignment.validator.Validator;
  */
 public class UserRequestHandler implements RequestHandler {
 
-    private Validator<String[]> validator;
+    private List<Validator<InputRequest>> validatorList;
     private SuggestionDao suggestionDao;
     private PostProcessor postProcessor;
 
-    public UserRequestHandler(final Validator<String[]> validator, final SuggestionDao suggestionDao, final PostProcessor postProcessor) {
-        this.validator = validator;
+    public UserRequestHandler(final List<Validator<InputRequest>> validatorList, final SuggestionDao suggestionDao, final PostProcessor postProcessor) {
+        this.validatorList = validatorList;
         this.suggestionDao = suggestionDao;
         this.postProcessor = postProcessor;
     }
 
     @Override
-    public void preProcess(final String[] request) {
-        validator.validate(request);
+    public void preProcess(final InputRequest inputRequest) {
+        validatorList.forEach(validator -> validator.validate(inputRequest));
     }
 
     @Override
-    public List<PositionDetails> process(final String request) {
-        final List<PositionDetails> goEuroSuggestionList = suggestionDao.getSuggestion(request);
+    public List<PositionDetails> process(final InputRequest inputRequest) {
+        final List<PositionDetails> goEuroSuggestionList = suggestionDao.getSuggestion(inputRequest);
         return goEuroSuggestionList;
     }
 

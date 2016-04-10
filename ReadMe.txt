@@ -1,12 +1,9 @@
-Java Developer Test
-===================
-
-The purpose of this test is to see how you approach a problem and what your solutions look like. The requirements for this test are simple and should be straightforward to grasp. When implementing a solution, please keep things simple but well engineered - as you would do for production code. 
+The purpose of this code is to see how you approach a problem and what your solutions look like. The requirements for this test are simple and should be straightforward to grasp. When implementing a solution, please keep things simple but well engineered - as you would do for production code. 
 That said:
 Implement an API query and transform this data into a csv file
 Create a Java command line tool that takes as an input parameter a string
 
-java -jar GoEuroTest.jar "CITY_NAME"
+java -jar myJar.jar "CITY_NAME"
 
 The program takes this string and queries with it our Location JSON API:
 The app should use this API endpoint:

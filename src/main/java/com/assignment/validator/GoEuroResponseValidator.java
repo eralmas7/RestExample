@@ -10,17 +10,10 @@ import com.assignment.response.model.PositionDetails;
  */
 public class GoEuroResponseValidator implements Validator<ResponseEntity<List<PositionDetails>>> {
 
-    private Validator<ResponseEntity<List<PositionDetails>>> validator;
-
-    public GoEuroResponseValidator(Validator<ResponseEntity<List<PositionDetails>>> validator) {
-        this.validator = validator;
-    }
-
     @Override
     public void validate(final ResponseEntity<List<PositionDetails>> goUserSuggestionResponse) {
         if (!goUserSuggestionResponse.hasBody()) {
             throw new InvalidResponseException("Got an empty response from goeuro");
         }
-        validator.validate(goUserSuggestionResponse);
     }
 }

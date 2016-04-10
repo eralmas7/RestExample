@@ -11,17 +11,10 @@ import com.assignment.response.model.PositionDetails;
  */
 public class GoEuroResponseStatusValidator implements Validator<ResponseEntity<List<PositionDetails>>> {
 
-    private Validator<ResponseEntity<List<PositionDetails>>> validator;
-
-    public GoEuroResponseStatusValidator(Validator<ResponseEntity<List<PositionDetails>>> validator) {
-        this.validator = validator;
-    }
-
     @Override
     public void validate(final ResponseEntity<List<PositionDetails>> goUserSuggestionResponse) {
         if (goUserSuggestionResponse.getStatusCode() != HttpStatus.OK) {
             throw new InvalidResponseException("Got invalid response from goeuro " + goUserSuggestionResponse.getStatusCode());
         }
-        validator.validate(goUserSuggestionResponse);
     }
 }

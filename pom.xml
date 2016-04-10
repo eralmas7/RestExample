@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.assignment</groupId>
-    <artifactId>GoEuroProject</artifactId>
+    <artifactId>GoEuroAssignment</artifactId>
     <version>1.0.0</version>
     
     <!-- Using Java 8 -->

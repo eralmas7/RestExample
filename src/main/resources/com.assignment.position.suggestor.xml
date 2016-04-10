@@ -11,35 +11,30 @@
 	
 	<import resource="classpath:com.assignment.position.suggestor.connection.pool.xml" />
 
-	<bean id="statusResponseValidator" class="com.assignment.validator.GoEuroResponseStatusValidator">
-		<constructor-arg ref="responseValidator"/>
-	</bean>
+	<bean id="statusResponseValidator" class="com.assignment.validator.GoEuroResponseStatusValidator"/>
 	
-	<bean id="responseValidator" class="com.assignment.validator.GoEuroResponseValidator">
-		<constructor-arg ref="nullResponseValidator"/>
-	</bean>
+	<bean id="responseValidator" class="com.assignment.validator.GoEuroResponseValidator" />
 	
-	<bean id="nullResponseValidator" class="com.assignment.validator.NullResponseValidator" />
-
-	<bean id="nullRequestValidator" class="com.assignment.validator.NullRequestValidator" />
-	
-	<bean id="requestedCityValidator" class="com.assignment.validator.RequestedCityValidator">
-		<constructor-arg ref="nullRequestValidator"/>
-	</bean>
-
-	<bean id="userRequestValidator" class="com.assignment.validator.UserRequestValidator">
-		<constructor-arg ref="requestedCityValidator"/>
-	</bean>
+	<bean id="requestedCityValidator" class="com.assignment.validator.RequestedCityValidator"/>
 
 	<bean id="requestPostProcessor" class="com.assignment.request.handler.PositionPostProcessor" />
 	
 	<bean id="positionSuggestor" class="com.assignment.dao.PositionSuggestionDao">
 		<constructor-arg ref="restTemplate"/>
-		<constructor-arg ref="responseValidator"/>
+		<constructor-arg>
+			<list value-type="com.assignment.validator.Validator">
+	            <ref bean="statusResponseValidator"/>
+	            <ref bean="responseValidator"/>
+	        </list>
+        </constructor-arg>
 	</bean>
 	
 	<bean id="requestHandler" class="com.assignment.request.handler.UserRequestHandler">
-		<constructor-arg ref="userRequestValidator"/>
+		<constructor-arg>
+	        <list value-type="com.assignment.validator.Validator">
+	            <ref bean="requestedCityValidator"/>
+	        </list>
+        </constructor-arg>
 		<constructor-arg ref="positionSuggestor"/>
 		<constructor-arg ref="requestPostProcessor"/>
 	</bean>

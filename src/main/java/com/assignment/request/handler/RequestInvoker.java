@@ -1,6 +1,7 @@
 package com.assignment.request.handler;
 
 import java.util.List;
+import com.assignment.response.model.InputRequest;
 import com.assignment.response.model.PositionDetails;
 
 /**
@@ -15,9 +16,9 @@ public class RequestInvoker implements Invoker {
     }
 
     @Override
-    public List<PositionDetails> invoke(final String[] request) {
-        requestHandler.preProcess(request);
-        final List<PositionDetails> suggestionList = requestHandler.process(request[0]);
+    public List<PositionDetails> invoke(final InputRequest inputRequest) {
+        requestHandler.preProcess(inputRequest);
+        final List<PositionDetails> suggestionList = requestHandler.process(inputRequest);
         requestHandler.postProcess(suggestionList);
         return suggestionList;
     }
