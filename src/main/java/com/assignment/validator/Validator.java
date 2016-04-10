@@ -13,4 +13,5 @@ public interface Validator<T> {
      * @param userInput
      */
     public void validate(final T input);
+	
 }

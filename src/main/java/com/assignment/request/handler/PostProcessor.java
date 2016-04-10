@@ -7,7 +7,7 @@ import com.assignment.response.model.PositionDetails;
  * A post processor which is responsible to process position information that we get from data
  * store.
  */
-public interface PostProcessor {
+public interface PostProcessor { 
 
     /**
      * Based on input list returned from data store, we might need to write to file or print
